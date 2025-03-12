@@ -1070,145 +1070,7 @@ func (c *ChatCompletionsNamedToolSelection) GetChatCompletionsNamedToolSelection
 
 // chatCompletionsOptions - The configuration information for a chat completions request. Completions support a wide variety
 // of tasks and generate text that continues from or "completes" provided prompt data.
-type chatCompletionsOptions struct {
-	// REQUIRED; The collection of context messages associated with this chat completions request. Typical usage begins with a
-	// chat message for the System role that provides instructions for the behavior of the
-	// assistant, followed by alternating messages between the User and Assistant roles.
-	Messages []ChatRequestMessageClassification
-
-	// Parameters for audio output. Required when audio output is requested with modalities: ["audio"]
-	Audio *AudioOutputParameters
-
-	// The configuration entries for Azure OpenAI chat extensions that use them. This additional specification is only compatible
-	// with Azure OpenAI.
-	AzureExtensionsOptions []AzureChatExtensionConfigurationClassification
-
-	// If provided, the configuration options for available Azure OpenAI chat enhancements.
-	Enhancements *AzureChatEnhancementConfiguration
-
-	// A value that influences the probability of generated tokens appearing based on their cumulative frequency in generated
-	// text. Positive values will make tokens less likely to appear as their frequency
-	// increases and decrease the likelihood of the model repeating the same statements verbatim.
-	FrequencyPenalty *float32
-
-	// Controls how the model responds to function calls. "none" means the model does not call a function, and responds to the
-	// end-user. "auto" means the model can pick between an end-user or calling a
-	// function. Specifying a particular function via {"name": "my_function"} forces the model to call that function. "none" is
-	// the default when no functions are present. "auto" is the default if functions
-	// are present.
-	FunctionCall *ChatCompletionsOptionsFunctionCall
-
-	// A list of functions the model may generate JSON inputs for.
-	Functions []FunctionDefinition
-
-	// A map between GPT token IDs and bias scores that influences the probability of specific tokens appearing in a completions
-	// response. Token IDs are computed via external tokenizer tools, while bias
-	// scores reside in the range of -100 to 100 with minimum and maximum values corresponding to a full ban or exclusive selection
-	// of a token, respectively. The exact behavior of a given bias score varies
-	// by model.
-	LogitBias map[string]*int32
-
-	// Whether to return log probabilities of the output tokens or not. If true, returns the log probabilities of each output
-	// token returned in the content of message. This option is currently not available
-	// on the gpt-4-vision-preview model.
-	LogProbs *bool
-
-	// An upper bound for the number of tokens that can be generated for a completion, including visible output tokens and reasoning
-	// tokens.
-	MaxCompletionTokens *int32
-
-	// The maximum number of tokens allowed for the generated answer. By default, the number of tokens the model can return will
-	// be (4096 - prompt tokens).
-	// This value is now deprecated in favor of max_completion_tokens, and is not compatible with o1 series models.
-	MaxTokens *int32
-
-	// Developer-defined tags and values used for filtering completions in the stored completions dashboard.
-	Metadata map[string]*string
-
-	// Output types that you would like the model to generate for this request. Most models are capable of generating text, which
-	// is the default: ["text"]The gpt-4o-audio-preview model can also be used to
-	// generate audio. To request that this model generate both text and audio responses, you can use: ["text", "audio"]
-	Modalities []ChatCompletionModality
-
-	// The model name to provide as part of this completions request. Not applicable to Azure OpenAI, where deployment information
-	// should be included in the Azure resource URI that's connected to.
-	DeploymentName *string
-
-	// The number of chat completions choices that should be generated for a chat completions response. Because this setting can
-	// generate many completions, it may quickly consume your token quota. Use
-	// carefully and ensure reasonable settings for max_tokens and stop.
-	N *int32
-
-	// Whether to enable parallel function calling during tool use.
-	ParallelToolCalls *bool
-
-	// Configuration for a Predicted Output, which can greatly improve response times when large parts of the model response are
-	// known ahead of time. This is most common when you are regenerating a file with
-	// only minor changes to most of the content.
-	Prediction *PredictionContent
-
-	// A value that influences the probability of generated tokens appearing based on their existing presence in generated text.
-	// Positive values will make tokens less likely to appear when they already exist
-	// and increase the model's likelihood to output new topics.
-	PresencePenalty *float32
-
-	// This option is only valid for o1 models,
-	// Constrains effort on reasoning for reasoning models (see https://platform.openai.com/docs/guides/reasoning).
-	// Currently supported values are low, medium, and high. Reducing reasoning effort can result in faster responses and fewer
-	// tokens used on reasoning in a response.
-	ReasoningEffort *ReasoningEffortValue
-
-	// An object specifying the format that the model must output. Used to enable JSON mode.
-	ResponseFormat ChatCompletionsResponseFormatClassification
-
-	// If specified, the system will make a best effort to sample deterministically such that repeated requests with the same
-	// seed and parameters should return the same result. Determinism is not guaranteed,
-	// and you should refer to the system_fingerprint response parameter to monitor changes in the backend."
-	Seed *int64
-
-	// A collection of textual sequences that will end completions generation.
-	Stop []string
-
-	// Whether or not to store the output of this chat completion request for use in our model distillation or evaluation products.
-	Store *bool
-
-	// A value indicating whether chat completions should be streamed for this request.
-	Stream *bool
-
-	// Options for streaming response. Only set this when you set stream: true.
-	StreamOptions *ChatCompletionStreamOptions
-
-	// The sampling temperature to use that controls the apparent creativity of generated completions. Higher values will make
-	// output more random while lower values will make results more focused and
-	// deterministic. It is not recommended to modify temperature and top_p for the same completions request as the interaction
-	// of these two settings is difficult to predict.
-	Temperature *float32
-
-	// If specified, the model will configure which of the provided tools it can use for the chat completions response.
-	ToolChoice *ChatCompletionsToolChoice
-
-	// The available tool definitions that the chat completions request can use, including caller-defined functions.
-	Tools []ChatCompletionsToolDefinitionClassification
-
-	// An integer between 0 and 5 specifying the number of most likely tokens to return at each token position, each with an associated
-	// log probability. logprobs must be set to true if this parameter is
-	// used.
-	TopLogProbs *int32
-
-	// An alternative to sampling with temperature called nucleus sampling. This value causes the model to consider the results
-	// of tokens with the provided probability mass. As an example, a value of 0.15
-	// will cause only the tokens comprising the top 15% of probability mass to be considered. It is not recommended to modify
-	// temperature and top_p for the same completions request as the interaction of
-	// these two settings is difficult to predict.
-	TopP *float32
-
-	// An identifier for the caller or end user of the operation. This may be used for tracking or rate-limiting purposes.
-	User *string
-
-	// The security context identifies and authenticates users and applications in your multi-tenant AI system, helping security
-	// teams investigate and mitigate incidents.
-	UserSecurityContext *UserSecurityContext
-}
+type chatCompletionsOptions = ChatCompletionsOptions
 
 // ChatCompletionsResponseFormat - An abstract representation of a response format configuration usable by Chat Completions.
 // Can be used to enable JSON mode.
@@ -3191,6 +3053,12 @@ type ChatCompletionsOptions struct {
 
 	// Whether or not to store the output of this chat completion request for use in our model distillation or evaluation products.
 	Store *bool
+
+	// A value indicating whether chat completions should be streamed for this request.
+	Stream *bool
+
+	// Options for streaming response. Only set this when you set stream: true.
+	StreamOptions *ChatCompletionStreamOptions
 
 	// The sampling temperature to use that controls the apparent creativity of generated completions. Higher values will make
 	// output more random while lower values will make results more focused and

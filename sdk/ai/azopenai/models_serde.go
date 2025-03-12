@@ -2228,7 +2228,7 @@ func (c *ChatCompletionsNamedToolSelection) UnmarshalJSON(data []byte) error {
 }
 
 // MarshalJSON implements the json.Marshaller interface for type ChatCompletionsOptions.
-func (c chatCompletionsOptions) MarshalJSON() ([]byte, error) {
+func (c ChatCompletionsOptions) MarshalJSON() ([]byte, error) {
 	objectMap := make(map[string]any)
 	populate(objectMap, "audio", c.Audio)
 	populate(objectMap, "data_sources", c.AzureExtensionsOptions)
@@ -2266,7 +2266,7 @@ func (c chatCompletionsOptions) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements the json.Unmarshaller interface for type ChatCompletionsOptions.
-func (c *chatCompletionsOptions) UnmarshalJSON(data []byte) error {
+func (c *ChatCompletionsOptions) UnmarshalJSON(data []byte) error {
 	var rawMsg map[string]json.RawMessage
 	if err := json.Unmarshal(data, &rawMsg); err != nil {
 		return fmt.Errorf("unmarshalling type %T: %v", c, err)
